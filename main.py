@@ -92,8 +92,18 @@ def export_results(data, format='json', filename='output'):
         with open(f'{filename}.xml', 'wb') as f:
             f.write(xml)
 
+
+def create_indexes(conn):
+    cursor = conn.cursor()
+    cursor.execute("CREATE INDEX IF NOT EXISTS idx_students_room ON students(room_id);")
+    cursor.execute("CREATE INDEX IF NOT EXISTS idx_students_birthday ON students(birthday);")
+    cursor.execute("CREATE INDEX IF NOT EXISTS idx_students_sex ON students(sex);")
+    conn.commit()
+
+
 def main():
     conn = connect_db()
+    create_indexes(conn)
 
     result_1 = get_room_student_counts(conn)
     result_2 = get_top5_youngest_avg_age(conn)
